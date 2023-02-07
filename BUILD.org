@@ -1,0 +1,10 @@
+#+TITLE: Basic build
+
+For now the recommended way is to build using the given Containerfile.
+This can be done with the following commands:
+#+begin_src bash
+podman build -f Containerfile -t iotrace/build
+podman run -v .:/usr/share/code -it iotrace/build
+cmake -S /usr/share/code -B /usr/share/code/build
+cmake --build /usr/share/code/build
+#+end_src
