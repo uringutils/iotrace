@@ -4,7 +4,7 @@
 #include <sys/resource.h>
 #include <bpf/libbpf.h>
 #include <unistd.h>
-#include "iotrace/probe.h"
+#include "iotrace/iotrace.h"
 #include "probe.skel.h"
 
 static struct env {
@@ -12,8 +12,8 @@ static struct env {
 	long min_duration_ms;
 } env;
 
-
-static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va_list args)
+static int libbpf_print_fn(enum libbpf_print_level level, const char *format,
+			   va_list args)
 {
 	if (level == LIBBPF_DEBUG && !env.verbose)
 		return 0;
@@ -31,13 +31,13 @@ static int handle_event(void *ctx, void *data, size_t data_sz)
 {
 	const struct message *msg = data;
 
-	printf("user data: %ld opcode: %d res: %d\n", msg->user_data, msg->opcode, msg->res);
+	print_event(msg);
 
 	return 0;
 }
 
-
-int8_t trace_pid(int tracee_pid){
+int8_t trace_pid(int tracee_pid)
+{
 	struct ring_buffer *rb = NULL;
 	struct probe_bpf *skel;
 	int err;
@@ -71,7 +71,8 @@ int8_t trace_pid(int tracee_pid){
 	}
 
 	/* Set up ring buffer polling */
-	rb = ring_buffer__new(bpf_map__fd(skel->maps.messages), handle_event, NULL, NULL);
+	rb = ring_buffer__new(bpf_map__fd(skel->maps.messages), handle_event,
+			      NULL, NULL);
 	if (!rb) {
 		err = -1;
 		fprintf(stderr, "Failed to create ring buffer\n");

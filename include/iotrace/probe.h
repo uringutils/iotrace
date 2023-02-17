@@ -1,18 +1,80 @@
 /* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
-/* Copyright (c) 2020 Facebook */
+
 #ifndef PROBE_H
 #define PROBE_H
 
-enum event_type {
+enum io_uring_ops {
+	IO_RING_OP_NOP,
+	IO_RING_OP_READV,
+	IO_RING_OP_WRITEV,
+	IO_RING_OP_FSYNC,
+	IO_RING_OP_READ_FIXED,
+	IO_RING_OP_WRITE_FIXED,
+	IO_RING_OP_POLL_ADD,
+	IO_RING_OP_POLL_REMOVE,
+	IO_RING_OP_SYNC_FILE_RANGE,
+	IO_RING_OP_SENDMSG,
+	IO_RING_OP_RECVMSG,
+	IO_RING_OP_TIMEOUT,
+	IO_RING_OP_TIMEOUT_REMOVE,
+	IO_RING_OP_ACCEPT,
+	IO_RING_OP_ASYNC_CANCEL,
+	IO_RING_OP_LINK_TIMEOUT,
+	IO_RING_OP_CONNECT,
+	IO_RING_OP_FALLOCATE,
+	IO_RING_OP_OPENAT,
+	IO_RING_OP_CLOSE,
+	IO_RING_OP_FILES_UPDATE,
+	IO_RING_OP_STATX,
+	IO_RING_OP_READ,
+	IO_RING_OP_WRITE,
+	IO_RING_OP_FADVISE,
+	IO_RING_OP_MADVISE,
+	IO_RING_OP_SEND,
+	IO_RING_OP_RECV,
+	IO_RING_OP_OPENAT2,
+	IO_RING_OP_EPOLL_CTL,
+	IO_RING_OP_SPLICE,
+	IO_RING_OP_PROVIDE_BUFFERS,
+	IO_RING_OP_REMOVE_BUFFERS,
+	IO_RING_OP_TEE,
+	IO_RING_OP_SHUTDOWN,
+	IO_RING_OP_RENAMEAT,
+	IO_RING_OP_UNLINKAT,
+	IO_RING_OP_MKDIRAT,
+	IO_RING_OP_SYMLINKAT,
+	IO_RING_OP_LINKAT,
+	IO_RING_OP_MSG_RING,
+	IO_RING_OP_FSETXATTR,
+	IO_RING_OP_SETXATTR,
+	IO_RING_OP_FGETXATTR,
+	IO_RING_OP_GETXATTR,
+	IO_RING_OP_SOCKET,
+	IO_RING_OP_URING_CMD,
+	IO_RING_OP_SEND_ZC,
+	IO_RING_OP_SENDMSG_ZC,
+
+	/* this goes last, obviously */
+	IO_RING_OP_LAST,
+};
+
+struct io_uring_op_desc {
+	char *name;
+};
+
+enum message_type {
   IO_URING_COMPLETE,
   IO_URING_SUBMIT_SQE,
 };
 
 struct message {
-  uint64_t user_data;
-  uint8_t opcode;
-  int res;
-  enum event_type type;
+  enum message_type type;
+  enum io_uring_ops opcode;
+  int fd;
+  unsigned long long user_data;
+  unsigned short buf_index;
 };
+
+
 
 #endif /* PROBE_H */
