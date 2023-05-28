@@ -5,7 +5,7 @@
 #include <bpf/libbpf.h>
 #include <unistd.h>
 #include "iotrace/iotrace.h"
-#include "probe.skel.h"
+#include "probe.bpf.h"
 
 static struct env {
 	bool verbose;
