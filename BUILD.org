@@ -1,10 +1,29 @@
 #+TITLE: Basic build
 
+# Build in a container
 For now the recommended way is to build using the given Containerfile.
 This can be done with the following commands:
+
 #+begin_src bash
 podman build -f Containerfile -t iotrace/build
 podman run -v .:/usr/share/code -it iotrace/build
-cmake -S /usr/share/code -B /usr/share/code/build
-cmake --build /usr/share/code/build
+CC=clang CC_LD=lld meson setup builddir /usr/share/code
+ninja -C builddir
 #+end_src
+
+# Vendored build
+The project and all its dependencies can be built with the following commands:
+#+begin_src bash
+cmake -B /tmp/build -S libs -DINSTALL_DIR=$VENDOR_PATH && cmake --build /tmp/build
+PKG_CONFIG_PATH="$VENDOR_PATH/lib64/pkgconfig:$VENDOR_PATH/lib/pkgconfig" CC=clang CC_LD=lld meson setup builddir .
+ninja -C builddir
+#+end_src
+
+Work will be done to add dependencies wrap and remove the need to build the dependencies before building the project.
+
+
+# Non vendored manual builds
+For manual builds the following dependencies are needed:
+- zlib
+- libelf
+- libbpf
