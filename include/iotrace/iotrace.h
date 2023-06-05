@@ -4,7 +4,7 @@
 #define IOTRACE_H
 
 #include <stdint.h>
-#include "iotrace/probe.h"
+#include "probe.h"
 
 void print_event(const struct message *msg);
 

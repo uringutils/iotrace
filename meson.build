@@ -1,8 +1,9 @@
 project('iotrace', 'c')
 
-zlib = dependency('zlib', static: true)
-libelf = dependency('libelf', static: true)
-libbpf = dependency('libbpf', static: true)
+zlib = subproject('zlib').get_variable('zlib_dep')
+libelf = subproject('elfutils').get_variable('libelf_dep')
+libbpf = subproject('libbpf').get_variable('libbpf_dep')
+libbpf_includes = libbpf.get_variable('includes')
 bpftool = find_program('bpftool', '/usr/share/vendor/usr/local/sbin/bpftool')
 clang = find_program('clang')
 
@@ -20,7 +21,7 @@ probe = custom_target(
     command : [clang, '-g', '-O2', 
                 '-target', 'bpf',
                 '-I', meson.current_build_dir(),
-                '-isystem', libbpf.get_variable(pkgconfig:'includedir'),
+                '-isystem', libbpf_includes,
                 '-c', '@INPUT@', '-o', '@OUTPUT@',
                 ''.join('-D__TARGET_ARCH_', target_machine.cpu())]
 )
