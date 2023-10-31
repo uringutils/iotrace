@@ -3,7 +3,7 @@ project('iotrace', 'c')
 zlib = dependency('zlib', static: true)
 libelf = dependency('libelf', static: true)
 libbpf = dependency('libbpf', static: true)
-bpftool = find_program('bpftool', '/usr/share/vendor/usr/local/sbin/bpftool')
+bpftool = find_program('bpftool', '/usr/sbin/bpftool')
 clang = find_program('clang')
 
 vmlinux = custom_target(
