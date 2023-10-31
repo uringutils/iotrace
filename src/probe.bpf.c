@@ -42,8 +42,8 @@ int io_uring_complete(struct trace_event_raw_io_uring_complete *event)
 	return 0;
 }
 
-SEC("tracepoint/io_uring/io_uring_submit_sqe")
-int io_uring_submit_sqe(struct trace_event_raw_io_uring_submit_sqe *event)
+SEC("tracepoint/io_uring/io_uring_submit_req")
+int io_uring_submit_sqe(struct trace_event_raw_io_uring_submit_req *event)
 {
 	u64 pid;
 	struct message *msg;

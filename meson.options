@@ -1,0 +1,1 @@
+option('vendor', type : 'string', value : '/usr/share/vendor', description : 'Path to an extra toolchain')

@@ -3,7 +3,9 @@ project('iotrace', 'c')
 zlib = dependency('zlib', static: true)
 libelf = dependency('libelf', static: true)
 libbpf = dependency('libbpf', static: true)
-bpftool = find_program('bpftool', '/usr/share/vendor/usr/local/sbin/bpftool')
+
+vendor = get_option('vendor')
+bpftool = find_program('bpftool', dirs: [vendor / 'usr/local/sbin/', vendor / 'sbin', '/usr/sbin'])
 clang = find_program('clang')
 
 vmlinux = custom_target(
@@ -38,4 +40,6 @@ exe = executable('iotrace',
     vmlinux,
     probe_header,
     include_directories:incdir,
+    install: true,
+    install_dir : '/usr/sbin',
     dependencies: [zlib, libelf, libbpf])
