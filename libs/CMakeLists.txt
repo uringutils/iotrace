@@ -10,7 +10,7 @@ set(DOWNLOAD_DIR ${CMAKE_CURRENT_BINARY_DIR}/downloads CACHE STRING "Download ar
 
 # zlib build
 ExternalProject_Add(zlib
-  URL "file:///home/abuild/rpmbuild/SOURCES/zlib-1.2.13.tar.gz"
+  URL "https://github.com/madler/zlib/releases/download/v1.2.13/zlib-1.2.13.tar.gz"
   DOWNLOAD_DIR ${DOWNLOAD_DIR}
   DOWNLOAD_EXTRACT_TIMESTAMP TRUE
   CONFIGURE_COMMAND bash -c "CFLAGS=\"${EXTRA_CFLAGS}\" ./configure --prefix=${INSTALL_DIR}" 
@@ -22,7 +22,7 @@ ExternalProject_Add(zlib
 # libelf build
 ExternalProject_Add(libelf
   DEPENDS zlib
-  URL "file:///home/abuild/rpmbuild/SOURCES/elfutils-0.189.tar.bz2"
+  URL "https://sourceware.org/elfutils/ftp/0.189/elfutils-0.189.tar.bz2"
   DOWNLOAD_DIR ${DOWNLOAD_DIR}
   DOWNLOAD_EXTRACT_TIMESTAMP TRUE
   CONFIGURE_COMMAND
@@ -51,7 +51,7 @@ ExternalProject_Add(libelf
 # bpftool build
 ExternalProject_Add(bpftool
   DEPENDS libelf
-  URL "file:///home/abuild/rpmbuild/SOURCES/bpftool-libbpf-v7.2.0-sources.tar.gz"
+  URL "https://github.com/libbpf/bpftool/releases/download/v7.2.0/bpftool-libbpf-v7.2.0-sources.tar.gz"
   DOWNLOAD_DIR ${DOWNLOAD_DIR}
   DOWNLOAD_EXTRACT_TIMESTAMP TRUE
   CONFIGURE_COMMAND ""
