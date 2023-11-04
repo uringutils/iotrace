@@ -4,8 +4,11 @@
 #include <sys/resource.h>
 #include <bpf/libbpf.h>
 #include <unistd.h>
+#include <spawn.h>
 #include "iotrace/iotrace.h"
 #include "probe.bpf.h"
+
+extern char **environ;
 
 static struct env {
 	bool verbose;
@@ -103,16 +106,26 @@ cleanup:
 int main(int argc, char **argv)
 {
 	int tracee_pid;
-	if (argc != 2) {
-		fprintf(stderr, "Usage: iotrace pid\n");
-		return 2;
+
+	if (argc < 2) {
+		fprintf(stderr, "Usage: %s PROG [ARGS] or -p PID\n", argv[0]);
+		return 1;
 	}
 
 	/* Cleaner handling of Ctrl-C */
 	signal(SIGINT, sig_handler);
 	signal(SIGTERM, sig_handler);
 
-	tracee_pid = strtol(argv[1], NULL, 10);
-	printf("Trying to trace pid %d\n", tracee_pid);
-	return trace_pid(tracee_pid);
+	if (strcmp(argv[1], "-p") == 0) {
+		tracee_pid = strtol(argv[1], NULL, 10);
+		printf("Trying to trace pid %d\n", tracee_pid);
+		return trace_pid(tracee_pid);
+	} else {
+		if (posix_spawnp(&tracee_pid, argv[1], NULL, NULL, argv + 1, environ) == -1) {
+			printf("Unable to start process: %s", strerror(errno));
+			return 1;
+		}
+		printf("Trying to trace pid %d\n", tracee_pid);
+		return trace_pid(tracee_pid);
+	}
 }
